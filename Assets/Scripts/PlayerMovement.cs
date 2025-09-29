@@ -13,6 +13,9 @@ public class PlayerMovement : MonoBehaviour
     private float collisionTimer = 0f;
     private bool speedReducedThisCollision = false;
 
+    private bool isSpeedBoostActive = false;
+    private bool controlsInverted = false;
+
     [SerializeField] private AudioClip collisionSound; // Asignar "oof.mp3" en el Inspector
     private AudioSource audioSource;
 
@@ -54,9 +57,16 @@ public class PlayerMovement : MonoBehaviour
     // --- Detectar colisiones ---
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        isColliding = true;
-        collisionTimer = 0f;
-        speedReducedThisCollision = false; // permitir reducción en cada nueva colisión
+        if (isSpeedBoostActive)
+        {
+            controlsInverted = true;
+        }
+        else
+        {
+            isColliding = true;
+            collisionTimer = 0f;
+            speedReducedThisCollision = false; // permitir reducción en cada nueva colisión
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
@@ -76,7 +86,31 @@ public class PlayerMovement : MonoBehaviour
         }
 
         moveInput = context.ReadValue<Vector2>();
+        if (controlsInverted)
+        {
+            moveInput = -moveInput;
+        }
+
         animator.SetFloat("InputX", moveInput.x);
         animator.SetFloat("InputY", moveInput.y);
     }
+
+    public void ActivateSpeedBoost(float newSpeed, float duration)
+    {
+        StartCoroutine(SpeedBoostCoroutine(newSpeed, duration));
+    }
+
+    private System.Collections.IEnumerator SpeedBoostCoroutine(float newSpeed, float duration)
+    {
+        float originalSpeed = moveSpeed;
+        moveSpeed = newSpeed;
+        isSpeedBoostActive = true;
+
+        yield return new WaitForSeconds(duration);
+
+        isSpeedBoostActive = false;
+        controlsInverted = false;
+        moveSpeed = originalSpeed;
+    }
+
 }
