@@ -21,9 +21,6 @@ Thumbs.db
 .idea/
 *.psd
 *.fbx
-*.png
-*.jpg
-*.mp3
 *.tga
 *.wav
 Build/
