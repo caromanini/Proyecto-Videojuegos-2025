@@ -23,7 +23,10 @@ public class GameController : MonoBehaviour
     [Header("Exit Settings")]
     [SerializeField] private GameObject exitPrefab;         
     [SerializeField] private Transform exitSpawnPoint;      
-    private GameObject exitInstance;                        
+    private GameObject exitInstance;
+
+    public float TotalTime => totalTime;
+    public float TimeRemaining => timeRemaining;
 
     void Start()
     {
@@ -117,6 +120,11 @@ public class GameController : MonoBehaviour
     void OnDestroy()
     {
         Gem.OnGemCollect -= IncreaseProgressAmount;
+    }
+
+    public float GetRemainingFraction()
+    {
+        return Mathf.Clamp01(timeRemaining / totalTime);
     }
 
 
