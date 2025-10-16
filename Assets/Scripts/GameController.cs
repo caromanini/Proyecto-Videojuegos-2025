@@ -10,6 +10,7 @@ public class GameController : MonoBehaviour
 {
     public int progressAmount;
     public Slider progressSlider;
+    public AudioSource bgmAudioSource; // NUEVO: Referencia al AudioSource
 
     [Header("Timer")]
     public float totalTime = 60f;
@@ -37,6 +38,7 @@ public class GameController : MonoBehaviour
         timeRemaining = totalTime;
         gameOverScreen.SetActive(false);
         winScreen.SetActive(false);
+        StartBGM();
     }
 
     void Update()
@@ -44,6 +46,24 @@ public class GameController : MonoBehaviour
         UpdateTimer();
     }
 
+    void StartBGM()
+    {
+        if (bgmAudioSource != null)
+        {
+
+            bgmAudioSource.volume = 0.3f;
+            bgmAudioSource.loop = true; // Asegura que se repita
+            bgmAudioSource.Play();
+        }
+    }
+
+    void StopBGM()
+    {
+        if (bgmAudioSource != null && bgmAudioSource.isPlaying)
+        {
+            bgmAudioSource.Stop();
+        }
+    }
 
     public void ResetGame()
     {
@@ -57,7 +77,7 @@ public class GameController : MonoBehaviour
         progressAmount += amount;
         progressSlider.value = progressAmount;
 
-        if (progressAmount >= 5)
+        if (progressAmount >= 4)
         {
             // Level complete
             // Debug.Log("Level Complete");
@@ -108,11 +128,13 @@ public class GameController : MonoBehaviour
 
     void GameOverScreen()
     {
+        StopBGM();
         gameOverScreen.SetActive(true);
     }
 
     void YouWon()
     {
+        StopBGM();
         winScreen.SetActive(true);
         Time.timeScale = 0f;
     }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections; // Necesario para IEnumerator
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -7,23 +8,30 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 moveInput;
     private Animator animator;
-    
+
     // Almohada
     [Header("Pillow")]
-    [SerializeField] private bool hasPillow = false;       
-    [SerializeField] private GameObject pillowIcon = null; 
+    [SerializeField] private bool hasPillow = false;
+    [SerializeField] private GameObject pillowIcon = null;
+
+    // --- AUDIO ---
+    [Header("Audio")]
+    [SerializeField] private AudioClip footstepSound; // Sonido de pasos (bucle)
+    [SerializeField] private AudioClip collisionSound; // Sonido de colisión (puntual)
+
+    // Dos AudioSources separados para sonidos en bucle y puntuales
+    private AudioSource footstepAudioSource;
+    private AudioSource collisionAudioSource;
+    private bool isPlayingFootsteps = false;
 
 
-    // --- NUEVO ---
+    // --- ESTADO ---
     private bool isColliding = false;
     private float collisionTimer = 0f;
     private bool speedReducedThisCollision = false;
 
     private bool isSpeedBoostActive = false;
     private bool controlsInverted = false;
-
-    [SerializeField] private AudioClip collisionSound; // Asignar "oof.mp3" en el Inspector
-    private AudioSource audioSource;
 
     public void SetHasPillow(bool value)
     {
@@ -37,44 +45,85 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
 
-        // Configurar el audio source
-        audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.playOnAwake = false;
-        audioSource.clip = collisionSound;
+        // CONFIGURACIÓN DE AUDIO SOURCE PARA PASOS (bucle)
+        footstepAudioSource = gameObject.AddComponent<AudioSource>();
+        footstepAudioSource.playOnAwake = false;
+        footstepAudioSource.clip = footstepSound; // Asignar el clip de pasos
+        footstepAudioSource.loop = true; // DEBE REPETIRSE
+
+        // CONFIGURACIÓN DE AUDIO SOURCE PARA COLISIONES (puntual)
+        collisionAudioSource = gameObject.AddComponent<AudioSource>();
+        collisionAudioSource.playOnAwake = false;
+        collisionAudioSource.clip = collisionSound; // Asignar el clip de colisión
+        collisionAudioSource.loop = false; // NO DEBE REPETIRSE
     }
 
     void Update()
     {
         rb.linearVelocity = moveInput * moveSpeed;
 
-        // Si está colisionando, acumulamos tiempo
+        // Lógica de Colisión (Penalización y Sonido)
         if (isColliding)
         {
             collisionTimer += Time.deltaTime;
 
-            // Ahora basta con 0.1 segundos para aplicar la penalización
             if (collisionTimer >= 0.1f && !speedReducedThisCollision)
             {
-                moveSpeed *= 0.9f; // reducir velocidad en 10% permanentemente
+                moveSpeed *= 0.9f;
                 speedReducedThisCollision = true;
 
-                if (audioSource && collisionSound)
+                // Reproducir el sonido de colisión
+                if (collisionAudioSource && collisionSound)
                 {
-                    audioSource.time = 0.8f; // saltar los primeros 0.8s del audio
-                    audioSource.Play();
+                    // Usa el AudioSource de colisión para el efecto de sonido
+                    collisionAudioSource.time = 0.8f; // saltar los primeros 0.8s
+                    collisionAudioSource.Play();
                 }
             }
         }
+
+        // Lógica del Sonido de Pasos
+        bool isMoving = moveInput.magnitude > 0.1f;
+
+        // Solo inicia los pasos si se mueve y no está colisionando
+        if (isMoving && !isPlayingFootsteps && !isColliding)
+        {
+            StartFootsteps();
+        }
+        else if (!isMoving && isPlayingFootsteps)
+        {
+            StopFootsteps();
+        }
     }
+
+    private void StartFootsteps()
+    {
+        if (footstepAudioSource && footstepSound)
+        {
+            // El clip ya está asignado en Start(), solo reproducimos
+            footstepAudioSource.Play();
+            isPlayingFootsteps = true;
+        }
+    }
+
+    private void StopFootsteps()
+    {
+        if (footstepAudioSource)
+        {
+            footstepAudioSource.Stop();
+            isPlayingFootsteps = false;
+        }
+    }
+
 
     // --- Detectar colisiones ---
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (hasPillow)
         {
-            hasPillow = false; 
+            hasPillow = false;
             if (pillowIcon != null) pillowIcon.SetActive(false);
-            return; // se quema la almohada y no se ejecuta el resto
+            return;
         }
 
         if (isSpeedBoostActive)
@@ -83,15 +132,24 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
+            // Detenemos los pasos al colisionar (aunque collisionAudioSource no los interrumpe,
+            // es bueno detener el bucle para dar prioridad al sonido puntual y a la pausa)
+            StopFootsteps();
+
             isColliding = true;
             collisionTimer = 0f;
-            speedReducedThisCollision = false; // permitir reducción en cada nueva colisión
+            speedReducedThisCollision = false;
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
         isColliding = false;
+        // Si el jugador todavía se está moviendo, reiniciamos los pasos
+        if (moveInput.magnitude > 0.1f)
+        {
+            StartFootsteps();
+        }
     }
 
     public void Move(InputAction.CallbackContext context)
