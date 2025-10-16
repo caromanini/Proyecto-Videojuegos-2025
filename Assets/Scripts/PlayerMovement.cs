@@ -7,6 +7,12 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 moveInput;
     private Animator animator;
+    
+    // Almohada
+    [Header("Pillow")]
+    [SerializeField] private bool hasPillow = false;       
+    [SerializeField] private GameObject pillowIcon = null; 
+
 
     // --- NUEVO ---
     private bool isColliding = false;
@@ -18,6 +24,13 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private AudioClip collisionSound; // Asignar "oof.mp3" en el Inspector
     private AudioSource audioSource;
+
+    public void SetHasPillow(bool value)
+    {
+        hasPillow = value;
+        if (pillowIcon != null) pillowIcon.SetActive(hasPillow);
+    }
+
 
     void Start()
     {
@@ -57,6 +70,13 @@ public class PlayerMovement : MonoBehaviour
     // --- Detectar colisiones ---
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (hasPillow)
+        {
+            hasPillow = false; 
+            if (pillowIcon != null) pillowIcon.SetActive(false);
+            return; // se quema la almohada y no se ejecuta el resto
+        }
+
         if (isSpeedBoostActive)
         {
             controlsInverted = true;
