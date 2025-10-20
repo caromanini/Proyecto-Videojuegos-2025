@@ -9,6 +9,12 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 moveInput;
     private Animator animator;
 
+    [Header("Stun")]
+    [SerializeField] private float stunDuration = 3f;
+    private bool isStunned = false;
+    private float stunTimer = 0f;
+    
+
     // Almohada
     [Header("Pillow")]
     [SerializeField] private bool hasPillow = false;
@@ -60,6 +66,20 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (isStunned)
+        {
+            stunTimer -= Time.deltaTime;
+            if (stunTimer < 0f)
+            {
+                isStunned = false;
+            }
+            moveInput = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
+            if(isPlayingFootsteps) StopFootsteps();
+            if(animator) animator.SetBool("isWalking", false);
+            return;
+        }
+
         rb.linearVelocity = moveInput * moveSpeed;
 
         // Lógica de Colisión (Penalización y Sonido)
@@ -119,6 +139,25 @@ public class PlayerMovement : MonoBehaviour
     // --- Detectar colisiones ---
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.collider.CompareTag("NPC")) // detectar la colision con npc
+        {
+            if (hasPillow)
+            {
+                hasPillow = false;
+                if (pillowIcon != null) pillowIcon.SetActive(false);
+                return;
+            }
+            Stun(stunDuration);
+            StopFootsteps();
+
+            if(collisionAudioSource && collisionSound)
+            {
+                collisionAudioSource.time = 0.0f;
+                collisionAudioSource.Play();
+            }
+            return;
+        }
+
         if (hasPillow)
         {
             hasPillow = false;
@@ -144,7 +183,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        isColliding = false;
+        isColliding = false; 
         // Si el jugador todavía se está moviendo, reiniciamos los pasos
         if (moveInput.magnitude > 0.1f)
         {
@@ -154,6 +193,17 @@ public class PlayerMovement : MonoBehaviour
 
     public void Move(InputAction.CallbackContext context)
     {
+        if (isStunned)
+        {
+            if(context.canceled && animator)
+            {
+                animator.SetBool("isWalking", false);
+                animator.SetFloat("LastInputX", 0f);
+                animator.SetFloat("LastInputY", 0f);
+
+            }
+            return;
+        }
         animator.SetBool("isWalking", true);
 
         if (context.canceled)
@@ -189,6 +239,16 @@ public class PlayerMovement : MonoBehaviour
         isSpeedBoostActive = false;
         controlsInverted = false;
         moveSpeed = originalSpeed;
+    }
+
+    private void Stun(float duration)
+    {
+        isStunned = true;
+        stunTimer = duration;
+        rb.linearVelocity = Vector2.zero;
+
+        StopFootsteps();
+        if (animator) animator.SetBool("isWalking", false);
     }
 
 }
