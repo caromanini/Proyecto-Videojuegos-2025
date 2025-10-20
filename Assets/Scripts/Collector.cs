@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections; 
 
 public class Collector : MonoBehaviour
 {
@@ -21,6 +22,9 @@ public class Collector : MonoBehaviour
     };
 
     private const string PixelSizePropertyName = "_PixelSize";
+
+    // --- temporizador / control de boost temporal ---
+    private Coroutine tempBoostCoroutine = null;
 
     void Start()
     {
@@ -46,11 +50,40 @@ public class Collector : MonoBehaviour
         }
     }
 
-    private void AddGlasses(int amount)
+    // ahora en público para que otros items como los eye drops lo puedan llamar
+    public void AddGlasses(int amount)
     {
         glassesCount += amount;
 
         UpdatePixelSize(glassesCount);
+    }
+
+    // Aplica temporalmente la "visión completa" durante 5 segundos.
+    public void ApplyTemporaryFullGlasses(float duration)
+    {
+
+        if (tempBoostCoroutine != null)
+        {
+            StopCoroutine(tempBoostCoroutine);
+            tempBoostCoroutine = null;
+        }
+
+        int previousCount = glassesCount;
+        glassesCount = 5;
+        UpdatePixelSize(glassesCount);
+
+        tempBoostCoroutine = StartCoroutine(TemporaryFullGlassesCoroutine(duration, previousCount));
+    }
+
+    private IEnumerator TemporaryFullGlassesCoroutine(float duration, int previousCount)
+    {
+        yield return new WaitForSeconds(duration);
+
+        // Restaurar al conteo previo de lentes
+        glassesCount = previousCount;
+        UpdatePixelSize(glassesCount);
+
+        tempBoostCoroutine = null;
     }
 
     private void UpdatePixelSize(int count)
