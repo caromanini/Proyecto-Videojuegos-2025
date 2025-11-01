@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using System.Collections; 
+using System.Collections;
 
 public class Collector : MonoBehaviour
 {
@@ -9,7 +9,6 @@ public class Collector : MonoBehaviour
     [Header("Shader Settings")]
     public Material pixelatedMaterial;
 
-    //SOY EL VICHO. Esta linea es para debuggear si cambia el pixelsize
     public float CurrentPixelSize = 50f;
 
     private readonly Dictionary<int, float> pixelSizeMap = new Dictionary<int, float>()
@@ -22,23 +21,33 @@ public class Collector : MonoBehaviour
     };
 
     private const string PixelSizePropertyName = "_PixelSize";
-
-    // --- temporizador / control de boost temporal ---
     private Coroutine tempBoostCoroutine = null;
 
     void Start()
     {
         UpdatePixelSize(glassesCount);
+        SubscribeToEvents();
     }
 
-    private void OnEnable()
+    void OnDestroy()
     {
-        Gem.OnGemCollect += AddGlasses;
+        UnsubscribeFromEvents();
     }
 
-    private void OnDisable()
+    private void SubscribeToEvents()
     {
-        Gem.OnGemCollect -= AddGlasses;
+        if (GameEventManager.Instance != null)
+        {
+            GameEventManager.Instance.OnGlassPieceCollected += AddGlasses;
+        }
+    }
+
+    private void UnsubscribeFromEvents()
+    {
+        if (GameEventManager.Instance != null)
+        {
+            GameEventManager.Instance.OnGlassPieceCollected -= AddGlasses;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -50,18 +59,15 @@ public class Collector : MonoBehaviour
         }
     }
 
-    // ahora en público para que otros items como los eye drops lo puedan llamar
     public void AddGlasses(int amount)
     {
+        Debug.Log($"[Collector] Adding glasses: {amount}");
         glassesCount += amount;
-
         UpdatePixelSize(glassesCount);
     }
 
-    // Aplica temporalmente la "visión completa" durante 5 segundos.
     public void ApplyTemporaryFullGlasses(float duration)
     {
-
         if (tempBoostCoroutine != null)
         {
             StopCoroutine(tempBoostCoroutine);
@@ -78,11 +84,8 @@ public class Collector : MonoBehaviour
     private IEnumerator TemporaryFullGlassesCoroutine(float duration, int previousCount)
     {
         yield return new WaitForSeconds(duration);
-
-        // Restaurar al conteo previo de lentes
         glassesCount = previousCount;
         UpdatePixelSize(glassesCount);
-
         tempBoostCoroutine = null;
     }
 
@@ -95,7 +98,6 @@ public class Collector : MonoBehaviour
 
         if (pixelSizeMap.TryGetValue(count, out float newPixelSize))
         {
-            // 1. Actualiza la variable pública (para el Inspector)
             CurrentPixelSize = newPixelSize;
             pixelatedMaterial.SetFloat(PixelSizePropertyName, newPixelSize);
         }

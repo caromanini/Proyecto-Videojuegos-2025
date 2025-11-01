@@ -43,41 +43,37 @@ public class BossMessages : MonoBehaviour
         "¡Muévete más rápido!"
     };
 
-    private GameController gameController;
+    private TimerManager timerManager;
     private Coroutine messageRoutine;
     private bool hasStartedMessages = false;
 
     void Start()
     {
-        gameController = FindAnyObjectByType<GameController>();
+        timerManager = FindAnyObjectByType<TimerManager>();
 
-        // 1. Configurar posiciones de la UI
         if (angryBossImage != null && messageBubble != null)
         {
-            // Posición en pantalla (se asume que ya están en la posición deseada en el Editor)
+            // Posición en pantalla
             onScreenBossPosition = angryBossImage.anchoredPosition;
             onScreenBubblePosition = messageBubble.GetComponent<RectTransform>().anchoredPosition;
 
             // Posición fuera de pantalla (Abajo)
-            // Se asume que el pivote Y=0 está en el borde inferior. 
             offScreenPosition = onScreenBossPosition;
-            offScreenPosition.y -= 500f; // Mueve 500 unidades hacia abajo fuera de la vista.
+            offScreenPosition.y -= 500f;
 
-            // Mover ambos elementos fuera de la pantalla al inicio
             angryBossImage.anchoredPosition = offScreenPosition;
             messageBubble.GetComponent<RectTransform>().anchoredPosition = offScreenPosition;
         }
 
-        // 2. Ocultar la burbuja (la imagen del jefe debe estar fuera de pantalla)
         messageBubble.SetActive(false);
     }
 
     void Update()
     {
-        if (gameController == null) return;
+        if (timerManager == null) return;
 
-        float elapsed = gameController.TotalTime - gameController.TimeRemaining;
-        float fraction = elapsed / gameController.TotalTime;
+        float elapsed = timerManager.TotalTime - timerManager.TimeRemaining;
+        float fraction = elapsed / timerManager.TotalTime;
 
         if (!hasStartedMessages && fraction >= 1f / 3f)
         {
@@ -88,20 +84,17 @@ public class BossMessages : MonoBehaviour
 
     IEnumerator MessageLoop()
     {
-        while (gameController != null && gameController.TimeRemaining > 0)
+        while (timerManager != null && timerManager.TimeRemaining > 0)
         {
-            float urgency = 1f - (gameController.TimeRemaining / gameController.TotalTime);
+            float urgency = 1f - (timerManager.TimeRemaining / timerManager.TotalTime);
             float interval = Mathf.Lerp(maxInterval, minInterval, urgency);
 
             yield return new WaitForSeconds(interval);
 
-            // 1. Mostrar, animar entrada, y pulsar
             StartCoroutine(AnimateEntryAndShowMessage());
 
-            // Esperar la duración del mensaje + duración de la entrada
             yield return new WaitForSeconds(messageDuration + entryDuration);
 
-            // 2. Ocultar y animar salida
             StartCoroutine(AnimateExitAndHide());
         }
     }
@@ -216,7 +209,6 @@ public class BossMessages : MonoBehaviour
         if (messageRoutine != null)
         {
             StopCoroutine(messageRoutine);
-            // Asegúrate de detener también el pulso y ocultar
             if (pulseRoutine != null) StopCoroutine(pulseRoutine);
             if (angryBossImage != null) angryBossImage.gameObject.SetActive(false);
             messageBubble.SetActive(false);
