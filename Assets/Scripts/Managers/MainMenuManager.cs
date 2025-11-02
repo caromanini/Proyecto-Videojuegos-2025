@@ -32,10 +32,10 @@ public class MainMenuManager : MonoBehaviour
         sfxSource.playOnAwake = false;
     }
 
-    // Por ahora se va directamente al level 1
+    // Esto manda a la escena para seleccionar el nivel
     public void PlayGame()
     {
-        SceneManager.LoadScene("Level_1");
+        SceneManager.LoadScene("LevelSelect");
     }
 
     public void LoadLevel(string levelName)
