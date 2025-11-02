@@ -105,8 +105,7 @@ public class GameStateManager : MonoBehaviour
     public void LoadMainMenu()
     {
         Time.timeScale = 1f;
-        // Aqui tengo que agregar el scene para el main menu, o para elegir los niveles 
-        // o algo asi
+        SceneManager.LoadScene("MainMenu");
     }
 
     public void PauseGame()

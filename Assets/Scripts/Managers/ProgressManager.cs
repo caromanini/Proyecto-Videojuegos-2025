@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class ProgressManager : MonoBehaviour
 {
     [Header("Progress Settings")]
-    [SerializeField] private int targetProgress = 4;
+    [SerializeField] private int targetProgress = 5;
     [SerializeField] private Slider progressSlider;
 
     private int currentProgress = 0;
@@ -49,7 +49,6 @@ public class ProgressManager : MonoBehaviour
 
     private void OnGlassPieceCollected(int amount)
     {
-        Debug.Log($"[ProgressManager] Glass piece collected! Amount: {amount}");
         IncreaseProgress(amount);
     }
 
