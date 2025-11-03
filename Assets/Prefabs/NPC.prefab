@@ -167,6 +167,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd05187f4c0378d4cb7468a4126c3049, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 2
+  moveDistance: 3
+  moveHorizontally: 1
   speechBubble: {fileID: 3609765877505585864}
   bubbleDisplayTime: 3
 --- !u!1 &1827424452059519424
