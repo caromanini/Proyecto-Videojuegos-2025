@@ -15,6 +15,7 @@ public class PlayerPhysicsController : MonoBehaviour
     private float collisionTimer = 0f;
     private bool speedReducedThisCollision = false;
     private float originalSpeed;
+    private bool wasJustPushed = false; 
 
     void Awake()
     {
@@ -37,7 +38,11 @@ public class PlayerPhysicsController : MonoBehaviour
         // Si está stunned, no se mueve
         if (stateController != null && !stateController.CanMove())
         {
-            rb.linearVelocity = Vector2.zero;
+            if (!wasJustPushed)
+            {
+                rb.linearVelocity = Vector2.zero;
+            }
+
             if (animator != null)
             {
                 animator.SetBool("isWalking", false);
@@ -45,7 +50,10 @@ public class PlayerPhysicsController : MonoBehaviour
             return;
         }
 
-        rb.linearVelocity = moveDirection * moveSpeed;
+        if (!wasJustPushed)
+        {
+            rb.linearVelocity = moveDirection * moveSpeed;
+        }
     }
 
     private void UpdateCollisionPenalty()
@@ -99,12 +107,13 @@ public class PlayerPhysicsController : MonoBehaviour
 
     private void HandleNPCCollision()
     {
-        // Verificar si tiene almohada
         if (stateController != null && stateController.HasPillow)
         {
             stateController.ConsumePillow();
             return;
         }
+
+        StartCoroutine(PushCooldown());
 
         if (stateController != null)
         {
@@ -120,6 +129,13 @@ public class PlayerPhysicsController : MonoBehaviour
         {
             audioController.PlayCollisionSound();
         }
+    }
+
+    private IEnumerator PushCooldown()
+    {
+        wasJustPushed = true;
+        yield return new WaitForSeconds(0.3f);
+        wasJustPushed = false;
     }
 
     private void HandleWallCollision()
@@ -145,7 +161,7 @@ public class PlayerPhysicsController : MonoBehaviour
             if (audioController != null)
             {
                 audioController.StopFootsteps();
-                audioController.PlayCollisionSound(0.8f); 
+                audioController.PlayCollisionSound(0.8f);
             }
         }
     }

@@ -12,7 +12,9 @@ GameObject:
   - component: {fileID: 7386953189620702788}
   - component: {fileID: 2726445369041304351}
   - component: {fileID: 5915927822279727355}
-  - component: {fileID: 4334732955828562929}
+  - component: {fileID: 2899592626495928886}
+  - component: {fileID: 1429642336488857059}
+  - component: {fileID: 9196839388664426470}
   m_Layer: 7
   m_Name: NPC
   m_TagString: NPC
@@ -99,14 +101,14 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 921030516470910416}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -155,7 +157,7 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 4.86, y: 7.64}
   m_Direction: 0
---- !u!114 &4334732955828562929
+--- !u!114 &2899592626495928886
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -164,14 +166,41 @@ MonoBehaviour:
   m_GameObject: {fileID: 921030516470910416}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fd05187f4c0378d4cb7468a4126c3049, type: 3}
+  m_Script: {fileID: 11500000, guid: 688bdbf083837994c9d1a6fbc39fea1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 2
-  moveDistance: 3
-  moveHorizontally: 1
+  pushForce: 3
+  reachThreshold: 0.2
+  pathUpdateRate: 0.5
+--- !u!114 &1429642336488857059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 921030516470910416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fea66b2f269ed249a2dff614479f389, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waitTimeAtPiece: 4
+  fleeDuration: 3
+--- !u!114 &9196839388664426470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 921030516470910416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ae3d129842725f49aa8d7025ac5e101, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   speechBubble: {fileID: 3609765877505585864}
-  bubbleDisplayTime: 3
+  bubbleTime: 3
 --- !u!1 &1827424452059519424
 GameObject:
   m_ObjectHideFlags: 0
