@@ -13,7 +13,7 @@ public class NPCMovementController : MonoBehaviour
 
     private Rigidbody2D rb;
     private NPCStateController stateController;
-
+    private Animator animator;
     private List<Vector2> currentPath = new List<Vector2>();
     private int pathIndex = 0;
     private float pathTimer = 0f;
@@ -21,10 +21,14 @@ public class NPCMovementController : MonoBehaviour
 
     private bool isFleeingMovement = false;
 
+    private Vector2 lastMoveDirection;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         stateController = GetComponent<NPCStateController>();
+        animator = GetComponent<Animator>();
+
         rb.gravityScale = 0;
         rb.freezeRotation = true;
     }
@@ -66,6 +70,8 @@ public class NPCMovementController : MonoBehaviour
         isFleeingMovement = false;
         SetCollisionWithPlayer(true);
         rb.linearVelocity = Vector2.zero;
+
+        UpdateAnimation(Vector2.zero);
     }
 
     public void SetCollisionWithPlayer(bool active)
@@ -88,6 +94,7 @@ public class NPCMovementController : MonoBehaviour
         if (currentPath == null || currentPath.Count == 0 || pathIndex >= currentPath.Count)
         {
             rb.linearVelocity = Vector2.zero;
+            UpdateAnimation(Vector2.zero);
             return;
         }
 
@@ -98,16 +105,31 @@ public class NPCMovementController : MonoBehaviour
         float actualSpeed = isFleeingMovement ? moveSpeed * 1.5f : moveSpeed;
         rb.linearVelocity = direction * actualSpeed;
 
-        if (Mathf.Abs(direction.x) > 0.1f)
-        {
-            Vector3 scale = transform.localScale;
-            scale.x = direction.x > 0 ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
-            transform.localScale = scale;
-        }
+        UpdateAnimation(direction);
 
         if (Vector2.Distance(currentPos, target) <= reachThreshold)
         {
             pathIndex++;
+        }
+    }
+
+    private void UpdateAnimation(Vector2 direction)
+    {
+        if (animator == null) return;
+
+        if (direction.magnitude > 0.1f)
+        {
+            animator.SetBool("isWalking", true);
+            animator.SetFloat("InputX", direction.x);
+            animator.SetFloat("InputY", direction.y);
+
+            lastMoveDirection = direction;
+        }
+        else
+        {
+            animator.SetBool("isWalking", false);
+            animator.SetFloat("LastInputX", lastMoveDirection.x);
+            animator.SetFloat("LastInputY", lastMoveDirection.y);
         }
     }
 

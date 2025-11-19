@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8088134301448491307}
   - component: {fileID: 3633015256033557615}
   - component: {fileID: -2410309504980112046}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: EyeDrops
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,7 +120,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
