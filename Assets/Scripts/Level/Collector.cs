@@ -8,20 +8,20 @@ public class Collector : MonoBehaviour
 
     [Header("Shader Settings")]
     public Material pixelatedMaterial;
-
     public float CurrentPixelSize = 50f;
 
     private readonly Dictionary<int, float> pixelSizeMap = new Dictionary<int, float>()
     {
         { 0, 50f },
-        { 1, 120f },
-        { 2, 240f },
-        { 3, 360f },
-        { 4, 512f }
+        { 1, 80f },
+        { 2, 110f },
+        { 3, 200f },
+        { 4, 250f }
     };
 
     private const string PixelSizePropertyName = "_PixelSize";
     private Coroutine tempBoostCoroutine = null;
+    private bool isEyeDropsActive = false;
 
     void Start()
     {
@@ -61,9 +61,12 @@ public class Collector : MonoBehaviour
 
     public void AddGlasses(int amount)
     {
-        Debug.Log($"[Collector] Adding glasses: {amount}");
         glassesCount += amount;
-        UpdatePixelSize(glassesCount);
+
+        if (!isEyeDropsActive)
+        {
+            UpdatePixelSize(glassesCount);
+        }
     }
 
     public void ApplyTemporaryFullGlasses(float duration)
@@ -71,20 +74,17 @@ public class Collector : MonoBehaviour
         if (tempBoostCoroutine != null)
         {
             StopCoroutine(tempBoostCoroutine);
-            tempBoostCoroutine = null;
         }
 
-        int previousCount = glassesCount;
-        glassesCount = 5;
-        UpdatePixelSize(glassesCount);
-
-        tempBoostCoroutine = StartCoroutine(TemporaryFullGlassesCoroutine(duration, previousCount));
+        tempBoostCoroutine = StartCoroutine(TemporaryFullGlassesCoroutine(duration));
     }
 
-    private IEnumerator TemporaryFullGlassesCoroutine(float duration, int previousCount)
+    private IEnumerator TemporaryFullGlassesCoroutine(float duration)
     {
+        isEyeDropsActive = true;
+        UpdatePixelSize(5);
         yield return new WaitForSeconds(duration);
-        glassesCount = previousCount;
+        isEyeDropsActive = false;
         UpdatePixelSize(glassesCount);
         tempBoostCoroutine = null;
     }
