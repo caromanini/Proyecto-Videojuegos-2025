@@ -2235,7 +2235,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: SELECCIONA NIVEL
+  m_text: SELECCIONE  UN NIVEL
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: edcf20ad6079f9943a158827b1974c3b, type: 2}
   m_sharedMaterial: {fileID: -3183897721024914318, guid: edcf20ad6079f9943a158827b1974c3b, type: 2}
