@@ -27,6 +27,8 @@ public class LevelButton : MonoBehaviour
         LevelData = level;
         _levelNameText.SetText(level.LevelID);
 
+        _button.interactable = isUnlocked;
+
         if (isUnlocked)
         {
             _button.onClick.AddListener(LoadLevel);
