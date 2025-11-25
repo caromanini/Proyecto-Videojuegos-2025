@@ -26,7 +26,7 @@ public class LevelSelectManager : MonoBehaviour
     // índice del botón actualmente seleccionado (-1 = ninguno)
     private int _selectedIndex = -1;
 
-    // Nuevo: referencia al player UI que se moverá entre botones
+    // referencia al player UI que se moverá entre botones
     public LevelSelectPlayer LevelPlayer;
 
     private void Awake()
@@ -72,7 +72,6 @@ public class LevelSelectManager : MonoBehaviour
 
             LevelButton levelButton = buttonGO.GetComponent<LevelButton>();
 
-            // elegir sprite: primero el array LevelSprites (por orden), si no existe usar LevelData.LevelSprite
             Sprite spriteOverride = (LevelSprites != null && i < LevelSprites.Length) ? LevelSprites[i] : null;
 
             levelButton.Setup(CurrentArea.Levels[i], UnlockedLevelIDs.Contains(CurrentArea.Levels[i].LevelID), spriteOverride);
@@ -116,7 +115,6 @@ public class LevelSelectManager : MonoBehaviour
         if (first != -1)
         {
             SelectButton(first);
-            // Si hay player UI, colocarlo exactamente en el botón inicial
             if (LevelPlayer != null)
             {
                 var go = _buttonObjects[_selectedIndex];
@@ -126,7 +124,6 @@ public class LevelSelectManager : MonoBehaviour
         }
     }
 
-    // Mueve la selección en dirección -1 (izquierda) o +1 (derecha)
     private void MoveSelection(int direction)
     {
         if (_buttonObjects.Count == 0) return;
@@ -177,7 +174,6 @@ public class LevelSelectManager : MonoBehaviour
         return -1;
     }
 
-    // Selecciona el botón por índice y actualiza visual y EventSystem
     private void SelectButton(int index)
     {
         if (index < 0 || index >= _buttonObjects.Count) return;
@@ -214,7 +210,6 @@ public class LevelSelectManager : MonoBehaviour
                 LevelPlayer.MoveToButton(rt);
             }
 
-            // Actualizar el texto del nivel (LevelHeaderText) con el LevelName del LevelData
             UpdateLevelHeaderFromButton(newLB);
         }
     }

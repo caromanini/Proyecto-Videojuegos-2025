@@ -7,7 +7,7 @@ using System.Collections;
 public class LevelButton : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _levelNameText;
-    [SerializeField] private Image _artworkImage; // asigna en el prefab (opcional)
+    [SerializeField] private Image _artworkImage;
 
     public LevelData LevelData { get; set; }
 
@@ -28,16 +28,14 @@ public class LevelButton : MonoBehaviour
         ReturnColor = Color.grey;
 
         _defaultScale = transform.localScale;
-        _selectedScale = _defaultScale * 1.12f; // pequeño agrandamiento
+        _selectedScale = _defaultScale * 1.12f;
     }
 
-    // Ahora acepta un sprite opcional que sobrescribe LevelData.LevelSprite
     public void Setup(LevelData level, bool isUnlocked, Sprite overrideSprite = null)
     {
         LevelData = level;
         _levelNameText.SetText(level.LevelID);
 
-        // artwork: preferir override, sino el sprite guardado en LevelData
         Sprite toUse = overrideSprite != null ? overrideSprite : level.LevelSprite;
         if (_artworkImage != null)
         {
@@ -73,7 +71,6 @@ public class LevelButton : MonoBehaviour
         SceneManager.LoadScene(LevelData.Scene);
     }
 
-    // Nuevo: marca/desmarca el botón como seleccionado para visualización (ahora con escalado)
     public void SetSelected(bool selected)
     {
         if (_scaleCoroutine != null)
@@ -93,7 +90,7 @@ public class LevelButton : MonoBehaviour
 
         while (t < duration)
         {
-            t += Time.unscaledDeltaTime; // usar unscaled por UI responsiveness
+            t += Time.unscaledDeltaTime;
             transform.localScale = Vector3.Lerp(start, target, Mathf.SmoothStep(0f, 1f, t / duration));
             yield return null;
         }
@@ -102,7 +99,6 @@ public class LevelButton : MonoBehaviour
         _scaleCoroutine = null;
     }
 
-    // Permite que LevelSelectManager compruebe si el botón está activable
     public bool IsInteractable()
     {
         return _button != null && _button.interactable;

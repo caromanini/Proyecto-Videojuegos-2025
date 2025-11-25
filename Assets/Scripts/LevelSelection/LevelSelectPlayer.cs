@@ -19,7 +19,6 @@ public class LevelSelectPlayer : MonoBehaviour
         _rootCanvas = GetComponentInParent<Canvas>();
     }
 
-    // Mueve suavemente al botón (usa la cámara del canvas si existe)
     public void MoveToButton(UnityEngine.RectTransform buttonRect)
     {
         if (buttonRect == null) return;
@@ -32,7 +31,6 @@ public class LevelSelectPlayer : MonoBehaviour
         StartMove(target);
     }
 
-    // Posiciona inmediatamente en el botón (sin animación)
     public void SnapToButton(UnityEngine.RectTransform buttonRect)
     {
         if (buttonRect == null) return;
@@ -78,12 +76,10 @@ public class LevelSelectPlayer : MonoBehaviour
         _moveCoroutine = null;
     }
 
-    // Establece la escala X para "mirar" a la derecha o a la izquierda en función de la dirección del movimiento.
-    // Sólo invierte la escala si la dirección y el signo actual difieren.
     private void SetFacingByDirection(float deltaX)
     {
         const float eps = 0.001f;
-        if (Mathf.Abs(deltaX) < eps) return; // sin cambio significativo, no tocar
+        if (Mathf.Abs(deltaX) < eps) return;
 
         Vector3 s = _rectTransform.localScale;
         float currentSign = Mathf.Sign(s.x);
