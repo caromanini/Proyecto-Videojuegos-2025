@@ -278,7 +278,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Level Selection
+  m_text: Seleccione un nivel
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -656,6 +656,12 @@ MonoBehaviour:
   AreaHeaderText: {fileID: 247372400}
   LevelHeaderText: {fileID: 745180758}
   CurrentArea: {fileID: 11400000, guid: 787df7d46a6864d47a94f427ab8ca314, type: 2}
+  LevelSprites:
+  - {fileID: 21300000, guid: aa2e1e7ac1c128f4d8d1dbb1cda32a77, type: 3}
+  - {fileID: 21300000, guid: b1a2f667cdaa994458c4bde1f7c3d8d4, type: 3}
+  - {fileID: 21300000, guid: 4e7837b2406b39648a736bd3fb2b7332, type: 3}
+  - {fileID: 21300000, guid: d530c09842dd6c94391c0a2f691dcf48, type: 3}
+  - {fileID: 21300000, guid: f5793015340bee94e9e23f31ac3dc094, type: 3}
   LevelPlayer: {fileID: 2010827963}
 --- !u!1 &1540753515
 GameObject:
@@ -799,7 +805,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5f4579591e32b04c9e47b9d0f6e2b3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offset: {x: 50, y: -150}
+  offset: {x: 50, y: -180}
   moveDuration: 0.16
 --- !u!114 &2010827964
 MonoBehaviour:

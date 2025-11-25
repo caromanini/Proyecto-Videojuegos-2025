@@ -13,6 +13,9 @@ public class LevelSelectManager : MonoBehaviour
     public TextMeshProUGUI LevelHeaderText;
     public AreaData CurrentArea;
 
+    [Header("Opcional: sprites por índice (si los asignas aquí, se usarán en orden)")]
+    public Sprite[] LevelSprites;
+
     public HashSet<string> UnlockedLevelIDs = new HashSet<string>();
 
     private Camera _camera;
@@ -68,7 +71,11 @@ public class LevelSelectManager : MonoBehaviour
             CurrentArea.Levels[i].LevelButtonObj = buttonGO;
 
             LevelButton levelButton = buttonGO.GetComponent<LevelButton>();
-            levelButton.Setup(CurrentArea.Levels[i], UnlockedLevelIDs.Contains(CurrentArea.Levels[i].LevelID));
+
+            // elegir sprite: primero el array LevelSprites (por orden), si no existe usar LevelData.LevelSprite
+            Sprite spriteOverride = (LevelSprites != null && i < LevelSprites.Length) ? LevelSprites[i] : null;
+
+            levelButton.Setup(CurrentArea.Levels[i], UnlockedLevelIDs.Contains(CurrentArea.Levels[i].LevelID), spriteOverride);
         }
     }
 

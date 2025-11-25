@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 524f9d879ecdd864bad9be0cb0136717, type: 3}
   m_Name: Area1
   m_EditorClassIdentifier: 
-  AreaName: MyArea1
+  AreaName: Seleccione un nivel
   Levels:
   - {fileID: 11400000, guid: ca58c8d60e6035a47a42a6f9c15c6c58, type: 2}
   - {fileID: 11400000, guid: 54eb74b0431d5e04cb7ee7e912f2333e, type: 2}

@@ -15,6 +15,7 @@ MonoBehaviour:
   LevelID: level 1
   IsUnlockedByDefault: 1
   Scene:
-    m_SceneAsset: {fileID: 102900000, guid: 9395698391426394eb30d5fb0d5c53b7, type: 3}
-    m_SceneName: Level_5
-  LevelName: LNdisplay1
+    m_SceneAsset: {fileID: 102900000, guid: 2cda990e2423bbf4892e6590ba056729, type: 3}
+    m_SceneName: Level_1
+  LevelName: El Departamento
+  LevelSprite: {fileID: 21300000, guid: aa2e1e7ac1c128f4d8d1dbb1cda32a77, type: 3}

@@ -17,4 +17,5 @@ MonoBehaviour:
   Scene:
     m_SceneAsset: {fileID: 102900000, guid: 9395698391426394eb30d5fb0d5c53b7, type: 3}
     m_SceneName: Level_5
-  LevelName: LNdisplay5
+  LevelName: La Gran Casa
+  LevelSprite: {fileID: 21300000, guid: f5793015340bee94e9e23f31ac3dc094, type: 3}

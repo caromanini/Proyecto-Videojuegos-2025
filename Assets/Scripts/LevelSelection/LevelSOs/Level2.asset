@@ -15,6 +15,7 @@ MonoBehaviour:
   LevelID: level 2
   IsUnlockedByDefault: 1
   Scene:
-    m_SceneAsset: {fileID: 102900000, guid: 9395698391426394eb30d5fb0d5c53b7, type: 3}
-    m_SceneName: Level_5
-  LevelName: LNdisplay2
+    m_SceneAsset: {fileID: 102900000, guid: 51b07eedb06a28843b1674fe5faf2b7d, type: 3}
+    m_SceneName: Level_2
+  LevelName: La Casa
+  LevelSprite: {fileID: 21300000, guid: b1a2f667cdaa994458c4bde1f7c3d8d4, type: 3}

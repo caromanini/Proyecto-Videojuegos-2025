@@ -15,6 +15,7 @@ MonoBehaviour:
   LevelID: level 4
   IsUnlockedByDefault: 1
   Scene:
-    m_SceneAsset: {fileID: 102900000, guid: 9395698391426394eb30d5fb0d5c53b7, type: 3}
-    m_SceneName: Level_5
-  LevelName: LNdisplay4
+    m_SceneAsset: {fileID: 102900000, guid: 93d1ad0804394f04c97e5d0f1f39a66c, type: 3}
+    m_SceneName: Level_4
+  LevelName: El Restaurante
+  LevelSprite: {fileID: 21300000, guid: d530c09842dd6c94391c0a2f691dcf48, type: 3}

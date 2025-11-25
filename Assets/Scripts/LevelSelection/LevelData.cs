@@ -12,5 +12,9 @@ public class LevelData : ScriptableObject
     [Header("Level Display Information")]
     public string LevelName;
 
+    [Header("Level Artwork (opcional)")]
+    [Tooltip("Sprite para mostrar en el selector.")]
+    public Sprite LevelSprite;
+
     public GameObject LevelButtonObj { get; set; }
 }

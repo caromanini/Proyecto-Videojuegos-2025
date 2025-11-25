@@ -7,6 +7,7 @@ using System.Collections;
 public class LevelButton : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _levelNameText;
+    [SerializeField] private Image _artworkImage; // asigna en el prefab (opcional)
 
     public LevelData LevelData { get; set; }
 
@@ -30,10 +31,19 @@ public class LevelButton : MonoBehaviour
         _selectedScale = _defaultScale * 1.12f; // pequeño agrandamiento
     }
 
-    public void Setup(LevelData level, bool isUnlocked)
+    // Ahora acepta un sprite opcional que sobrescribe LevelData.LevelSprite
+    public void Setup(LevelData level, bool isUnlocked, Sprite overrideSprite = null)
     {
         LevelData = level;
         _levelNameText.SetText(level.LevelID);
+
+        // artwork: preferir override, sino el sprite guardado en LevelData
+        Sprite toUse = overrideSprite != null ? overrideSprite : level.LevelSprite;
+        if (_artworkImage != null)
+        {
+            _artworkImage.sprite = toUse;
+            _artworkImage.enabled = toUse != null;
+        }
 
         _button.interactable = isUnlocked;
 
