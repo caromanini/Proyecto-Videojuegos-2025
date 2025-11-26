@@ -7,8 +7,10 @@ public class PlayerStateController : MonoBehaviour
     [Header("Stun Settings")]
     [SerializeField] private float stunDuration = 3f;
 
-    [Header("Pillow Settings")]
+    [Header("UI Icons")]
     [SerializeField] private GameObject pillowIcon;
+    [SerializeField] private GameObject energyDrinkIcon;
+    [SerializeField] private GameObject eyeDropsIcon;
 
     public bool IsStunned { get; private set; }
     public bool HasPillow { get; private set; }
@@ -70,9 +72,23 @@ public class PlayerStateController : MonoBehaviour
     private IEnumerator SpeedBoostCoroutine(float duration)
     {
         IsSpeedBoostActive = true;
+
+        if (energyDrinkIcon != null) energyDrinkIcon.SetActive(true);
+
         yield return new WaitForSeconds(duration);
+
+        if (energyDrinkIcon != null) energyDrinkIcon.SetActive(false);
+        
         IsSpeedBoostActive = false;
         ControlsInverted = false;
+    }
+
+    public void SetEyeDropsActive(bool isActive)
+    {
+        if (eyeDropsIcon != null)
+        {
+            eyeDropsIcon.SetActive(isActive);
+        }
     }
 
     public void InvertControls()

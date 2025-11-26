@@ -23,8 +23,12 @@ public class Collector : MonoBehaviour
     private Coroutine tempBoostCoroutine = null;
     private bool isEyeDropsActive = false;
 
+    private PlayerStateController stateController;
+
     void Start()
     {
+        stateController = GetComponent<PlayerStateController>();
+
         UpdatePixelSize(glassesCount);
         SubscribeToEvents();
     }
@@ -83,7 +87,13 @@ public class Collector : MonoBehaviour
     {
         isEyeDropsActive = true;
         UpdatePixelSize(5);
+
+        if (stateController != null) stateController.SetEyeDropsActive(true);
+
         yield return new WaitForSeconds(duration);
+
+        if (stateController != null) stateController.SetEyeDropsActive(false);
+
         isEyeDropsActive = false;
         UpdatePixelSize(glassesCount);
         tempBoostCoroutine = null;

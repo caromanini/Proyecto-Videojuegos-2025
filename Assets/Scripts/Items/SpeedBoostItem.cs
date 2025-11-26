@@ -14,5 +14,11 @@ public class SpeedBoostItem : PowerUpBase
         {
             physicsController.ActivateSpeedBoost(boostedSpeed, boostDuration);
         }
+
+        PlayerStateController stateController = FindPlayerComponent<PlayerStateController>();
+        if (stateController != null)
+        {
+            stateController.ActivateSpeedBoost(boostDuration);
+        }
     }
 }
